@@ -5,30 +5,29 @@ CC	= avr-gcc
 OBJCOPY	= avr-objcopy
 DUDE	= avrdude
 FILES	= main.c
-FLAGS	= -Wall -Wextra -Werror -mmcu=$(MICROCONTROLLER) -I$(AVR_LIBC_DIR)/include
+
+# mmcu to tell what microcontroller we have
+FLAGS	= -Wall -Wextra -Werror -Os -mmcu=$(MICROCONTROLLER)
 BAUD_RATE	= 115200
 PORT	= /dev/ttyUSB0
-AVR_LIBC_DIR=/tmp/avr-libc
 
 # how fast is the CPU
 F_CPU	= 16000000 # pdf -> quartz 16Mhz
 
-all:	$(AVR_LIBC_DIR)/.CACHETAG hex flash
-
-$(AVR_LIBC_DIR)/.CACHETAG:
-	rm -rf $(AVR_LIBC_DIR)
-	git clone --depth=1 https://github.com/avrdudes/avr-libc/ $(AVR_LIBC_DIR)
-	cd $(AVR_LIBC_DIR) && ./bootstrap
-	cd $(AVR_LIBC_DIR) && ./configure --build=`./config.guess` --host=avr
-	cd $(AVR_LIBC_DIR) && make -j
-	touch $(AVR_LIBC_DIR)/.CACHETAG
+all:	hex flash
 
 hex:
 	$(CC) $(FLAGS) -DF_CPU=$(F_CPU) -o $(NAME).bin $(FILES)
 	$(OBJCOPY) -O ihex $(NAME).bin $(NAME).hex
+# -O to give a target
 
 flash:
 	$(DUDE) -p $(MICROCONTROLLER) -c $(PROG) -b $(BAUD_RATE) -P $(PORT) -U flash:w:main.hex:i
+# -p to specify which microcontroller we use
+# -c to specify a programmer (how to talk with the board)
+# -b to specify the baud rate
+# -P to give a port
+# -U which memory operation you want to do, i at the end is the format
 
 clean:
 	rm -f main.hex main.bin

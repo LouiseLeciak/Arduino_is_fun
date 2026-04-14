@@ -1,8 +1,9 @@
-#include "/tmp/avr-libc/include/avr/io.h"
+#include <avr/io.h>
 
 void turn_on_d1(void){
     DDRB |= (1 << PB0);
-    PORTB |= (1 << PB0);
+    while(1)
+        PORTB |= (1 << PB0);
 }
 // DDR: Data Direction Register, I'm using it to specify if I want to read (0)
 // or write (1), so fort the port PB0 I want the 0 to become a 1 to write
