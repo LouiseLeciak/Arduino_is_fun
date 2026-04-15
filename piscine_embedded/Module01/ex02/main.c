@@ -17,7 +17,7 @@ int main (void) {
     // set when at bottom
     // toggle clear to top
     // top send itback at bottom, bottom set it etc..
-    TCCR1A |= (1 << COM1A1) | (1 << WGM11) | (1 << WGM10);
+    TCCR1A |= (1 << COM1A1) | (1 << WGM11);
     
 
     // for mode 15 fast PWM
@@ -28,10 +28,10 @@ int main (void) {
     //p 143, table 16-5 CS12 1 0 0 to have 256 as prescaler
     TCCR1B |= (1 << CS12);
     
-    //set [TOGGLE] p142 16-4 fast PWM
+    //set [TOP p142 16-4 fast PWM
+    ICR1 = TIME_FREQUENCY;
+    // 1sec [TOGGLE]
     // 10% of time frequency
-    ICR1 = (TIME_FREQUENCY/10);
-    // 1sec [TOP]
-    OCR1A = TIME_FREQUENCY;
+    OCR1A = TIME_FREQUENCY/10;
     while (1){}
 }
