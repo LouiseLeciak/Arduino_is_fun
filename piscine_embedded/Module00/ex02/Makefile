@@ -7,6 +7,7 @@ DUDE	= avrdude
 FILES	= main.c
 
 # mmcu to tell what microcontroller we have
+# -Os for optimisation
 FLAGS	= -Wall -Wextra -Werror -Os -mmcu=$(MICROCONTROLLER)
 BAUD_RATE	= 115200
 PORT	= /dev/ttyUSB0
@@ -22,7 +23,7 @@ hex:
 # -O to give a target
 
 flash:
-	$(DUDE) -p $(MICROCONTROLLER) -c $(PROG) -b $(BAUD_RATE) -P $(PORT) -U flash:w:main.hex:i
+	$(DUDE) -p $(MICROCONTROLLER) -c $(PROG) -b $(BAUD_RATE) -P $(PORT) -U flash:w:$(NAME).hex:i
 # -p to specify which microcontroller we use
 # -c to specify a programmer (how to talk with the board)
 # -b to specify the baud rate
@@ -30,6 +31,6 @@ flash:
 # -U which memory operation you want to do, i at the end is the format
 
 clean:
-	rm -f main.hex main.bin
+	rm -f $(NAME).hex $(NAME).bin
 
 .PHONY: all hex flash clean
