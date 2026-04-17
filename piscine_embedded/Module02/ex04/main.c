@@ -9,10 +9,12 @@
 // p182 table 20-1
 #define MYUBRR ((F_CPU / (8 * BAUD)) - 1)
 #define LEDS ((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4))
+#define LED_XOR ((1 << PB0) | (0 << PB1) | (1 << PB2) | (0 << PB4))
 
 char user_buff[LEN] = {0};
 char pass_buff[LEN] = {0};
-int idx = 0;
+volatile int idx = 0;
+
 
 typedef enum State{
     INIT,
@@ -26,6 +28,23 @@ typedef enum State{
     END,
 }states_t;
 volatile states_t state = INIT;
+
+void invalid_password(void) {
+  for (uint8_t i = 0; i < 5; i++) {
+    PORTB &= ~LEDS;
+    _delay_ms(200);
+    PORTB |= LEDS;
+    _delay_ms(200);
+  }
+}
+
+void valid_password(void) {
+  for (uint8_t i = 0; i < 5; i++) {
+    PORTB |= LED_XOR;
+    _delay_ms(200);
+    PORTB ^= LEDS;
+  }
+}
 
 void uart_init() {
     // set baudrate
@@ -88,16 +107,17 @@ void __attribute__((signal, used)) __vector_18(void) {
     // if backspace, delete last char and update what's on screen    
     if (state == WAITING_USER) {
         // x7F = delete in ascii
-        if (rx == '\x7F'){
+        if (rx == '\x7F' || rx == '\b'){
             if (idx > 0) {
             user_buff[--idx] = '\0';
             uart_tx('\b'); // cursor goes back from one
             uart_tx(' '); // write a space to replace the char
             uart_tx('\b');// put the cursor back again to replace the space
-            return; }
+            }
+        return; 
         }
     // if enter then finish and change line
-        else if (rx == '\r'){
+        else if (rx == '\r' ){
             user_buff[idx++] = '\0';
             uart_printstr("\n\r");
             idx = 0;
@@ -114,14 +134,14 @@ void __attribute__((signal, used)) __vector_18(void) {
 
     //same with pass
     if (state == WAITING_PASS) {
-        if (rx == '\x7F'){
+        if (rx == '\x7F' || rx == '\b'){
             if (idx > 0) {
                 pass_buff[--idx] = '\0';
                 uart_tx('\b');
                 uart_tx(' ');
                 uart_tx('\b');
-                return;
             }
+            return;
         }
         else if (rx == '\r'){
             pass_buff[idx++] = '\0';
@@ -184,9 +204,17 @@ int main(void)
                 break;
             case CHECK_AUTH:
                 if (ft_strcmp(correct_user, user_buff) && ft_strcmp(correct_pass, pass_buff))
+                {
                     state = MATCHING;
+                    valid_password();
+                    PORTB &= ~LEDS;
+                }
                 else
+                {
                     state = BAD_COMB;
+                    invalid_password();
+                    PORTB &= ~LEDS;
+                }
                 break;
             case END:
                 break;
