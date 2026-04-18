@@ -18,6 +18,7 @@ void uart_init() {
     //p202 bit 4 Reveiver enable
     UCSR0B = (1 << TXEN0) | (1 << RXEN0);
     // 8n1 => 8 bits de data, no parite, 1 bit de stop
+    // p202 20.11.4
     // p203 20-11
     UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00);
 
@@ -35,6 +36,7 @@ void uart_tx(char c) {
 
 char uart_rx(void) {
     //p189, wait for data to be received
+    //p200 20.11.2
     while (!(UCSR0A & (1 << RXC0))){}
     // get and return received data from buffer
     return UDR0;

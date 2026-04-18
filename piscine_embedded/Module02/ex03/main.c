@@ -48,6 +48,8 @@ char invert_case(char c){
     return (c);
 }
 
+// p74
+// 19 - USART RxComplete
 void __attribute__((signal, used)) __vector_18(void) {
     uart_tx(invert_case(uart_rx()));
 }

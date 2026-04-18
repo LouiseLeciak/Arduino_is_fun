@@ -58,6 +58,7 @@ void timer_init() {
     // the timer is calling the interrupt by itself    
     
     // tell the timer to trigger the interrupt
+    // p103 15.2.2
     TIMSK1 |= (1 << OCIE1A);
 }
 
