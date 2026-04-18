@@ -125,6 +125,10 @@ void __attribute__((signal, used)) __vector_18(void) {
             return;
         }
         
+        else if (rx < 20 || rx > 126)
+            return;
+        if (idx >= LEN -1)
+            return;
         if (idx < LEN - 1){
             user_buff[idx] = rx;
             idx++;
@@ -150,7 +154,10 @@ void __attribute__((signal, used)) __vector_18(void) {
             state = CHECK_AUTH;
             return;
         }
-
+        else if (rx < 20 || rx > 126)
+            return;
+        if (idx >= LEN -1)
+            return;
         if (idx < LEN - 1){
             pass_buff[idx] = rx;
             idx++;
@@ -192,8 +199,7 @@ int main(void)
                 break;
             case MATCHING:
                 uart_printstr("Hello ");
-                // uart_printstr(username);
-                uart_printstr("spectre");
+                uart_printstr(user_buff);
                 uart_printstr("!\n\r");
                 uart_printstr("Shall we play a game?\n\r");
                 state = END;
