@@ -64,6 +64,9 @@ void __attribute__((signal, used)) USART_RX_vect(void){
 // #0000FF = blue
 // #FFFFFF = white
 // #000000 = black/turn off
+// #FFFF00 = yellow
+// #2BFAFA = cyan
+// #FF00FF = magenta
 
 int main(void)
 {

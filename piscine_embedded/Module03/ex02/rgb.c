@@ -12,20 +12,17 @@ void init_rgb(){
     // prescaler 8 p117 table 15-9
     TCCR0B |= (1 << CS01);
 
-    // p141 TIMER1 for the last color
-    TCCR1A |= (1 << WGM10);
-    TCCR1A |= (1 << COM1A1);
-    TCCR1B |= (1 << WGM12);
-    TCCR1B |= (1 << CS11);
+    //p164
+    TCCR2A |= (1 << WGM20) | (1 << WGM21);
+    TCCR2A |= (1 << COM2A1) | (1 << COM2B1);
+    TCCR2B |= (1 << CS21);
+
 }
 
 void set_rgb(uint8_t r, uint8_t g, uint8_t b){
-    OCR0A = r;
-    OCR0B = g;
-    OCR1A = b;
-    // OCR0A = 255 - r;
-    // OCR0B = 255 - g;
-    // OCR1A = 255 - b;
+    OCR0B = r;
+    OCR0A = g;
+    OCR2B = b;
 }
 
 void wheel(uint8_t pos) {
