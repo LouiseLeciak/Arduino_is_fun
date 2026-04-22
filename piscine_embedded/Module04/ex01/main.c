@@ -36,7 +36,6 @@ void __attribute__((signal)) __vector_14(void) {
         // tick back to 0
         tick = 0;
 
-        // wow leds are coooool
         OCR1A = duty_cycle_step * LEVEL;
     }
 }

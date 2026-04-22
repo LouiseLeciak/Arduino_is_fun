@@ -39,10 +39,11 @@ int main(void){
     // enable INT0, set the interrupt when sw1 is pressed
     EIMSK |= (1 << INT0);
     // ~1ms, OCR1A = TOP
+    // 16MHz/256 = 62500, 62500/62 ~= 1000Hz
 	OCR1A = 62;
     //p80 13.2.1 & 13-2
     // The rising edge of INT0 generates an interrupt request
-    // EICRA |= (1 << ISC00) | (1 << ISC01);
+    EICRA |= (1 << ISC00) | (1 << ISC01);
     
     SREG |= (1 << 7);
     while(1){}
