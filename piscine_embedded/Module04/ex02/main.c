@@ -1,7 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define BUTTONS ((1 << PD2) | (1 << PD4))
 #define LEDS ((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4))
 
 volatile uint16_t tic = 0;

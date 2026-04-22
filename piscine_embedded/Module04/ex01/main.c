@@ -67,7 +67,7 @@ int main (void) {
     TCCR1B |= (1 << WGM13) | (1 << WGM12);
     // no prescaler
     // p117 table 15-9
-    TCCR1B |= (1 << CS00);
+    TCCR1B |= (1 << CS10);
     // top of the counter
     ICR1 = PWM_TOP;
     // led off at first
