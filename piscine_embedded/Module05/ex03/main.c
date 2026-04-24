@@ -2,9 +2,7 @@
 #include "utils.h"
 
 //“Temperature Measurement” (ADC) p256 24-8
-// table “Temperature sensor characteristics”
-// Temperature = (ADC_value - ADC_at_25°C) / slope + 25
-// ou temp ≈ ADC - constante
+
 void init_temp_sensor() {
     // 1000 = temperature sensor (ADC8)
     // p256 24.8

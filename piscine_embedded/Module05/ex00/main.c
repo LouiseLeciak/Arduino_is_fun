@@ -24,9 +24,9 @@ void ADC_init() {
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 }
 
-uint8_t ADC_read() {
+uint8_t ADC_read_8() {
     //p252 ADC input Channels
-    // start a conversion
+    // p259.9.2 start a conversion
     ADCSRA |= (1 << ADSC);
     // wait until the conversion is over
     while(ADCSRA & (1 << ADSC)){}
@@ -40,7 +40,7 @@ int main() {
     ADC_init();
     uart_init();
     while (1) {
-        uint8_t res = ADC_read();
+        uint8_t res = ADC_read_8();
         uart_printhex(res);
         uart_printstr("\n\r");
         _delay_ms(20);

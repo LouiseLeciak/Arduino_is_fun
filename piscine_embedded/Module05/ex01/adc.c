@@ -23,7 +23,7 @@ void ADC_init() {
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 }
 
-uint8_t ADC_read() {
+uint8_t ADC_read_8() {
     //p252 ADC input Channels
     // start a conversion
     ADCSRA |= (1 << ADSC);

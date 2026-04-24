@@ -36,11 +36,11 @@ int main() {
 
     while (1) {
         set_ADC(SET_RV1);
-        res_r = ADC_read();
+        res_r = ADC_read_8();
         set_ADC(SET_LDR);
-        res_l = ADC_read();
+        res_l = ADC_read_8();
         set_ADC(SET_NTC);
-        res_n = ADC_read();
+        res_n = ADC_read_8();
 
         uart_printhex(res_r);
         uart_printstr(", ");

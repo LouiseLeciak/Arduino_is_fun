@@ -8,9 +8,9 @@
 void init_temp_sensor() {
     // 1000 = temperature sensor (ADC8)
     ADMUX |= (1 << MUX3);
-    // [CHECK DATASHEET] 1.1V
-    // ADMUX |= (1 << REFS1) | (1 << REFS0);
-    ADMUX |= (1 << REFS0);
+    // 1.1v : The internal 1.1V voltage reference must also be selected for the ADC voltage
+    // reference source in the temperature sensor measurement p 256
+    ADMUX |= (1 << REFS0) | (1 <<REFS1);
 }
 
 
