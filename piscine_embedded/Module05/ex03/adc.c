@@ -23,13 +23,31 @@ void ADC_init() {
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 }
 
-uint8_t ADC_read() {
+uint8_t ADC_read_8() {
     //p252 ADC input Channels
     // start a conversion
     ADCSRA |= (1 << ADSC);
+    // ADLAR = i want to read 8 or 10 bits? p259 schema 24.9.3
+    // for 8 with ADLAR = 1 only have to read ADCH
+    ADMUX |= (1 << ADLAR);
     // wait until the conversion is over
     while(ADCSRA & (1 << ADSC)){}
 
     //p259 24.9.3.2
     return ADCH;
+}
+
+uint16_t ADC_read_10() {
+    // p252 ADC input Channels
+    //  start a conversion
+    ADCSRA |= (1 << ADSC);
+    // ADLAR = i want to read 8 or 10 bits? p259 schema 24.9.3
+    // for 8 with ADLAR = 1 only have to read ADCH
+    // ADMUX |= (1 << ADLAR);
+    // wait until the conversion is over
+    while (ADCSRA & (1 << ADSC)) {
+    }
+
+    // p259 24.9.3.2
+    return ADC;
 }

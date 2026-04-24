@@ -19,9 +19,11 @@ void uart_tx(char c);
 char uart_rx(void);
 void uart_printstr(const char* str);
 void uart_printhex(uint8_t value);
-void uart_printint(int val);
+void uart_printint(uint8_t val);
+
 
 void ADC_init();
-uint8_t ADC_read();
+uint8_t ADC_read_8();
+uint16_t ADC_read_10();
 
 #endif

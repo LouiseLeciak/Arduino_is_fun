@@ -69,15 +69,10 @@ bool is_hex_char(char c) {
     return false;
 }
 
-void uart_printint(int val) {
+
+void uart_printint(uint8_t val) {
     char buffer[10];
     int i = 0;
-
-    // neg numbers
-    if (val < 0) {
-        uart_tx('-');
-        val = -val;
-    }
 
     // 0
     if (val == 0) {
