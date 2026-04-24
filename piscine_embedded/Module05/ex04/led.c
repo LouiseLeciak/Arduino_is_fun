@@ -40,11 +40,11 @@ void wheel(uint8_t pos) {
 
 void update_leds(uint8_t value) {
     // reset the leds
-    PORTB &= ~((1 << PB0)|(1 << PB1)|(1 << PB2)|(1 << PB3));
+    PORTB &= ~((1 << PB0)|(1 << PB1)|(1 << PB2)|(1 << PB4));
 
     // max 255
     if (value > 64)  PORTB |= (1 << PB0); // 255 * 0.25 = 63.75
     if (value > 128) PORTB |= (1 << PB1); // 255 * 0.50 = 127.5
     if (value > 192) PORTB |= (1 << PB2); // 255 * 0.75 = 191.25
-    if (value > 240) PORTB |= (1 << PB3); 
+    if (value > 240) PORTB |= (1 << PB4); 
 }

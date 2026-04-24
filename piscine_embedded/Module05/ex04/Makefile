@@ -4,7 +4,7 @@ MICROCONTROLLER	= atmega328p
 CC	= avr-gcc
 OBJCOPY	= avr-objcopy
 DUDE	= avrdude
-FILES	= main.c uart.c adc.c rgb.c
+FILES	= main.c uart.c adc.c led.c
 
 # mmcu to tell what microcontroller we have
 # -Os for optimisation

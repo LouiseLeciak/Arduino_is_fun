@@ -19,12 +19,13 @@ int main() {
     DDRB |= LEDS;
     ADC_init();
     // uart_init();
+    init_rgb();
 
     while (1) {
         uint8_t res = ADC_read();
 
         wheel(res);        // update RGB LED color
-        update_leds(val);  // update the 4 leds
+        update_leds(res);  // update the 4 leds
 
         _delay_ms(20);
     }

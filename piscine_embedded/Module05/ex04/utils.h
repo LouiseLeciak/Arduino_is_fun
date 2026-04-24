@@ -29,5 +29,6 @@ uint8_t ADC_read();
 void init_rgb();
 void set_rgb(uint8_t r, uint8_t g, uint8_t b);
 void wheel(uint8_t pos);
+void update_leds(uint8_t value);
 
 #endif
