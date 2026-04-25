@@ -22,8 +22,8 @@ void i2c_write(unsigned char data) {
     }
 }
 
-void print_hex_value(char c) {
-    char hex[] = "0123456789abcdef";
+void print_hex_value(char c) { 
+    char hex[] = "0123456789ABCDEF";
     char buf[3];
 
     unsigned char value = (unsigned char)c;
@@ -37,6 +37,7 @@ void print_hex_value(char c) {
 
 // Master Receiver Mode (p.229)
 void i2c_read(void) {
+    // we want 7 for 7 bytes p13
     for (int i = 0; i <= 5; i++) {
         TWCR = (1 << TWEN) | (1 << TWEA) | (1 << TWINT);
         while (!(TWCR & (1 << TWINT))) {
@@ -45,7 +46,7 @@ void i2c_read(void) {
         uart_tx(' ');
     }
 
-    TWCR = (1 << TWEN) | (1 << TWINT);
+    TWCR = (1 << TWEN) | (1 << TWEA) | (1 << TWINT);
     while (!(TWCR & (1 << TWINT))) {
     }
 
