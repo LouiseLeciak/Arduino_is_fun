@@ -14,9 +14,14 @@ void i2c_init(void) {
     TWSR &= ~(TWPS1 << 1) & ~(TWPS0 << 1);
 
     // p221/222 bit rate generator unit
-    //((F_CPU / 100kHz)- 16) / 2 * prescaler
+    //((F_CPU / 100kHz)- 16) / 2 / prescaler
     //  TWI bit rate register
     TWBR = 72;
+}
+
+void i2c_stop(void) {
+    // p225 7
+    TWCR |= (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
 }
 
 void i2c_start(void) {
@@ -29,8 +34,12 @@ void i2c_start(void) {
     // while TWINT = 0, wait
     while (!(TWCR & (1 << TWINT)));
 
-    if (TW_STATUS != TW_START)
+    if (TW_STATUS != TW_START) {
         uart_printstr("start error\n\r");
+        i2c_stop();
+
+    }
+
     else if (TW_STATUS == TW_START) {
         uart_printstr("0x");
         uart_printhex(TW_STATUS);
@@ -45,23 +54,20 @@ void i2c_start(void) {
 
     while (!(TWCR & (1 << TWINT)));
 
-    // https://www.nongnu.org/avr-libc/user-manual/group__util__twi.html
     //  p227
     // TW_STATUS = (TWSR & 0xf8)
-    if (TW_STATUS != TW_MT_SLA_ACK)
+    if (TW_STATUS != TW_MT_SLA_ACK) {
         uart_printstr("master transmitter ack error\n\r");
-    else if (TW_STATUS == TW_MT_SLA_ACK){
+        i2c_stop();
+    }
+
+    else if (TW_STATUS == TW_MT_SLA_ACK) {
         uart_printstr("0x");
         uart_printhex(TW_STATUS);
     }
-        
 }
 
-void i2c_stop(void) {
-    // p225 7
-    TWCR |= (1 << TWINT) | (1 << TWEN) | (1 << TWSTO);
-}
-
+// https://www.nongnu.org/avr-libc/user-manual/group__util__twi.html
 int main() {
     uart_init();
 

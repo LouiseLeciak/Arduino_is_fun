@@ -28,7 +28,7 @@ int main (void) {
     //p 143, table 16-5 CS12 1 0 0 to have 256 as prescaler
     TCCR1B |= (1 << CS12);
     
-    //set [TOP p142 16-4 fast PWM
+    //set [TOP] p142 16-4 fast PWM
     ICR1 = TIME_FREQUENCY;
     // 1sec [TOGGLE]
     // 10% of time frequency

@@ -25,7 +25,7 @@ int main (void) {
     //p 143, table 16-5 CS12 1 0 0 to have 256 as prescaler
     TCCR1B |= (1 << CS12);
     
-    //p 141 table 16-4 CTC -> TOP OCR1A
+    //p 141 table 16-4 CTC -> [TOP] OCR1A
     // /a because we want 0,5s
     OCR1A = TIME_FREQUENCY/2;
     while (1){}

@@ -16,11 +16,14 @@ void display_counter(int counter) {
 }
 
 void set_up(){
-    // and the buttons the input (0)
-    DDRD &= ~BUTTONS;
     // i want my led to be the output (1)
     DDRB |= LEDS;
+    // and the buttons the input (0)
+    DDRD &= ~BUTTONS;
+
 }
+
+
 // 14.2.1
 int main (void) {
     int counter = 0;

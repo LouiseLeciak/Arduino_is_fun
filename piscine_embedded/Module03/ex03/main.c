@@ -70,8 +70,8 @@ void __attribute__((signal, used)) USART_RX_vect(void){
 
 int main(void)
 {
-
-    SREG =(1 << 7);
+    // to enable interrupt
+    SREG |=(1 << 7);
     uart_init();
     init_rgb();
 

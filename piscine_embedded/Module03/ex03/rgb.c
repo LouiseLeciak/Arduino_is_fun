@@ -14,6 +14,7 @@ void init_rgb(){
     TCCR0B |= (1 << CS01);
 
     //p164
+    // timer02 bcs in schema LED_B PD3(OC2B/INT1)
     TCCR2A |= (1 << WGM20) | (1 << WGM21);
     TCCR2A |= (1 << COM2A1);
     TCCR2B |= (1 << CS21);
