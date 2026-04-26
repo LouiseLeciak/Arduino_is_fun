@@ -1,5 +1,7 @@
 
 #include "utils.h"
+#include <stdlib.h>
+
 
 volatile uint32_t temp_data = 0;
 volatile uint32_t hum_data = 0;
@@ -29,7 +31,7 @@ void get_data(uint8_t data, uint8_t current_byte){
         hum_data <<= 4;
         hum_data |= little_humidity;
         little_temperature = (data & 0x0F);
-        temp_data |= little_temperature;
+        temp_data = little_temperature;
     }
     else if (current_byte == 4){
         temp_data <<= 8;
@@ -52,7 +54,7 @@ void convert(void) {
 
     // formule p 13
     // Temperature [C] = (ST / 2^20) * 200 - 50
-    temperature = ((float)temp_data / (1UL << 20) * 200 - 50);
+    temperature = (((float)temp_data / (1UL << 20)) * 200 - 50);
     temp_stock += temperature;
     
 }
@@ -60,8 +62,9 @@ void convert(void) {
 
 int main() {
     int i = 0;
-    float mean_temp = 0;
-    float mean_hum = 0;
+    char buff_t[8] = {};
+    char buff_h[8] = {};
+
     uart_init();
     i2c_init();
     while (1) {
@@ -79,12 +82,13 @@ int main() {
         i++;
         if (i == 3){
             i = 0;
-            mean_temp = temp_stock / 3;
-            mean_hum = hum_data / 3;
+            //https://www.programmingelectronics.com/dtostrf/
+            dtostrf(temp_stock/3, 0, 1, buff_t);
+            dtostrf(hum_stock/3, 0, 1, buff_h);
             uart_printstr("Temperature: ");
-            uart_printfloat(mean_temp);
+            uart_printstr(buff_t);
             uart_printstr("C, Humidity: ");
-            uart_printfloat(mean_hum);
+            uart_printstr(buff_h);
             uart_printstr("%\n\r");
             temp_stock = 0;
             hum_stock = 0;

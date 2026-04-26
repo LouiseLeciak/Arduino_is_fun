@@ -1,5 +1,4 @@
 #include "utils.h"
-
 // screen /dev/ttyUSB0 115200
 // ctrl a puis k puis y
 
@@ -69,17 +68,6 @@ bool is_hex_char(char c) {
     return false;
 }
 
-// Reverses a string 'str' of length 'len'
-static void reverse(char* str, uint16_t len) {
-    uint16_t i = 0, j = len - 1, temp;
-    while (i < j) {
-        temp = str[i];
-        str[i] = str[j];
-        str[j] = temp;
-        i++;
-        j--;
-    }
-}
 
 void uart_printint(int val) {
     char buffer[10];
@@ -107,50 +95,4 @@ void uart_printint(int val) {
     for (int j = i - 1; j >= 0; j--) {
         uart_tx(buffer[j]);
     }
-}
-
-int ft_itoa(int val, char* buf) {
-    int i = 0;
-
-    // 0
-    if (val == 0) {
-        buf[0] = '0';
-        buf[1] = '\0';
-        return 1;
-    }
-
-    // convert in string
-    while (val > 0) {
-        buf[i++] = (val % 10) + '0';
-        val /= 10;
-    }
-    buf[i] = '0';
-
-    reverse(buf, i);
-
-    return (i);
-}
-
-float ft_pow_10(int nb) {
-    float val = 1;
-    while (nb--){
-        val *= 10;
-    }
-    return (val);
-}
-
-void float_to_array(float value, char* buf, int div) {
-    int before = (int)value;
-    // delete everything before the ,
-    float after = value - before;
-
-    int idx = ft_itoa(before, buf);
-    buf[idx++] = '.';
-    after = after * ft_pow_10(div);
-    ft_itoa(after, buf + idx);
-}
-
-void uart_printfloat(float value) {
-    char buf[128] = {};
-    float_to_array(value, buf, 2);
 }

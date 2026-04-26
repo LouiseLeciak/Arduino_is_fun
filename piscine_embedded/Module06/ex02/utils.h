@@ -22,7 +22,7 @@ char uart_rx(void);
 void uart_printstr(const char* str);
 void uart_printhex(uint8_t value);
 void uart_printint(int val);
-void uart_printfloat(float value);
+
 
 void i2c_init(void);
 void i2c_start(uint8_t state);
