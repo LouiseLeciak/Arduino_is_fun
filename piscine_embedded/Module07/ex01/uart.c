@@ -121,9 +121,8 @@ void display_state(void) {
         uart_tx(' ');
         for (uint8_t i = 0; i < 16; i++) {
             // +i to read every bytes from the 16
-            // convert addr uint8_t because : uint8_t eeprom_read_byte( const
             // uint8_t * __p) ptr to tell it where to read
-            uint8_t value = eeprom_read_byte((uint8_t*)(addr + i));
+            uint8_t value = ee_read(addr + i);
             uart_printhex(value);
             uart_tx(' ');
             // for ascii, check if printable char

@@ -100,7 +100,6 @@ void display_red_state(volatile uint16_t red) {
         for (uint8_t i = 0; i < 16; i++) {
             uint16_t current_addr = (addr + i);
             // +i to read every bytes from the 16
-            // convert addr uint8_t because : uint8_t eeprom_read_byte( const
             // uint8_t * __p) ptr to tell it where to read
             uint8_t value = eeprom_read_byte((uint8_t*)current_addr);
             if (current_addr == red) {
@@ -137,10 +136,10 @@ int main() {
 
         if (!parse_line(line)) continue;
 
-        uint8_t current_byte = eeprom_read_byte((uint8_t*)addr);
+        uint8_t current_byte = ee_read(addr);
         if (current_byte != value) {
             // replace the byte if it's different from the value
-            eeprom_write_byte((uint8_t*)addr, value);
+            ee_write(addr, value);
             display_red_state(addr);
         }
     }

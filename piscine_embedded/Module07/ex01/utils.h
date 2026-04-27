@@ -28,4 +28,7 @@ void display_state(void);
 
 int ft_len(char * str);
 
+uint8_t ee_read(uint16_t addr);
+void ee_write(uint16_t addr, uint8_t value);
+
 #endif
