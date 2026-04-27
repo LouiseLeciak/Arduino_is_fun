@@ -46,7 +46,7 @@ void uart_printhex(uint8_t value) {
     char buf[3];
 
     uint8_t first = value / 16;
-    uint8_t sec  = value % 16;
+    uint8_t sec = value % 16;
 
     buf[0] = hex[first];
     buf[1] = hex[sec];
@@ -95,4 +95,30 @@ void uart_printint(int val) {
     for (int j = i - 1; j >= 0; j--) {
         uart_tx(buffer[j]);
     }
+}
+
+void uart_printhex_32(uint32_t value) {
+    char hex[] = "0123456789abcdef";
+    char buf[9];
+
+    uint8_t i1 = (value / 268435456) % 16;// 16^7
+    uint8_t i2 = (value / 16777216) % 16;// 16^6
+    uint8_t i3 = (value / 1048576) % 16;// 16^5
+    uint8_t i4 = (value / 65536) % 16;// 16^4
+    uint8_t i5 = (value / 4096) % 16;// 16^3
+    uint8_t i6 = (value / 256) % 16;// 16^2
+    uint8_t i7 = (value / 16) % 16;// 16^1
+    uint8_t i8 = value % 16;// 16^0
+
+    buf[0] = hex[i1];
+    buf[1] = hex[i2];
+    buf[2] = hex[i3];
+    buf[3] = hex[i4];
+    buf[4] = hex[i5];
+    buf[5] = hex[i6];
+    buf[6] = hex[i7];
+    buf[7] = hex[i8];
+    buf[8] = '\0';
+
+    uart_printstr(buf);
 }
