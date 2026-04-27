@@ -10,6 +10,7 @@
 
 #define EEPROM_SIZE 1024
 #define RED "\x1b[31m"
+#define RED_END "\x1b[0m"
 
 
 void uart_init();
