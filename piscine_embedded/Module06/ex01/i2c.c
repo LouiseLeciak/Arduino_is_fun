@@ -45,7 +45,7 @@ void i2c_start(uint8_t state) {
             uart_printstr("master transmitter ack error\n\r");
     } else if (state == READ) {
         if (TW_STATUS != TW_MR_SLA_ACK)
-            uart_printstr("master transmitter ack error\n\r");
+            uart_printstr("master receiver ack error\n\r");
     }
 }
 

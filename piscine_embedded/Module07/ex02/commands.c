@@ -44,7 +44,7 @@ void set_id_cmd(char* arg, uint8_t* slot_id) {
     nodeconfig_ temp;
     config_read(*slot_id, &temp);
     if (!check_magic(&temp) || !check_integrity(&temp)) {
-        init_config(&temp);
+        init_config(&temp, slot_id);
     }
     temp.node_id = atoi_int(arg);
     config_reallocating(slot_id, &temp);
@@ -55,7 +55,7 @@ void set_prio_cmd(char* arg, uint8_t* slot_id) {
     nodeconfig_ temp;
     config_read(*slot_id, &temp);
     if (!check_magic(&temp) || !check_integrity(&temp)) {
-        init_config(&temp);
+        init_config(&temp, slot_id);
     }
     temp.priority = atoi_int(arg);
     config_reallocating(slot_id, &temp);
@@ -66,7 +66,7 @@ void set_tag_cmd(char* arg, uint8_t slot_id) {
     nodeconfig_ temp;
     config_read(slot_id, &temp);
     if (!check_magic(&temp) || !check_integrity(&temp)) {
-        init_config(&temp);
+        init_config(&temp, &slot_id);
     }
     for (int i = 0; arg[i]; i++) {
         temp.tag[i] = arg[i];

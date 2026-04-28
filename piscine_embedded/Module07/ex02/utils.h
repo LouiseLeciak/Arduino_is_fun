@@ -15,7 +15,7 @@
 #define TAG_LEN 32
 #define CMD_S 16
 #define ARG_S 32
-#define MAGIC_NB 222
+#define MAGIC_NB 22
 
 typedef struct{
     uint16_t magic_nb;
@@ -27,9 +27,9 @@ typedef struct{
 
 typedef enum{
     SLOT_0 = 0x10,
-    SLOT_1 = 0x200,
-    SLOT_2 = 0x550,
-    SLOT_3 = 0x800,
+    SLOT_1 = 0x100,
+    SLOT_2 = 0x180,
+    SLOT_3 = 0x240,
 } slots_;
 
 /// UART ///
@@ -59,7 +59,7 @@ bool config_write(uint8_t slot_id, nodeconfig_* config);
 void config_read(uint8_t slot_id, nodeconfig_* config);
 bool check_magic(nodeconfig_* config);
 bool check_integrity(nodeconfig_* config);
-void init_config(nodeconfig_* config);
+void init_config(nodeconfig_* config, uint8_t *slot_id);
 
 /// PARSING ///
 uint8_t parse_line(char* line);

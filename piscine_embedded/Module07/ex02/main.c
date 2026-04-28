@@ -15,13 +15,14 @@ void set_tag(char* tag, nodeconfig_ config) {
     return;
 }
 
-void init_config(nodeconfig_* config) {
+void init_config(nodeconfig_* config, uint8_t *slot_id) {
     config->magic_nb = MAGIC_NB;
     config->node_id = 12;
     set_tag("default_tag", *config);
     config->priority = 0;
     config->checksum = integrity_calculate(
         (uint8_t*)&config, sizeof(config) - sizeof(config->checksum));
+    config_write(*slot_id, config);
 }
 
 bool check_integrity(nodeconfig_* config) {
