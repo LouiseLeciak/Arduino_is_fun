@@ -1,0 +1,72 @@
+
+#ifndef UTILS_H
+#define UTILS_H
+
+#include <avr/eeprom.h>
+#include <avr/io.h>
+#define BAUD 115200
+// p182 table 20-1
+#define MYUBRR ((F_CPU / (8 * BAUD)) - 1)
+
+#define EEPROM_SIZE 1024
+#define RED "\x1b[31m"
+#define RED_END "\x1b[0m"
+#define LEN 100
+#define TAG_LEN 32
+#define CMD_S 16
+#define ARG_S 32
+#define MAGIC_NB 222
+
+typedef struct{
+    uint16_t magic_nb;
+    uint32_t node_id;
+    char tag[TAG_LEN + 1]; // max length 32 + 1 '\0'
+    int16_t priority;
+    uint16_t checksum;
+} nodeconfig_;
+
+typedef enum{
+    SLOT_0 = 0x10,
+    SLOT_1 = 0x200,
+    SLOT_2 = 0x550,
+    SLOT_3 = 0x800,
+} slots_;
+
+/// UART ///
+void uart_init();
+void uart_tx(char c);
+char uart_rx(void);
+void uart_printstr(const char* str);
+void uart_printhex(uint8_t value);
+void uart_printhex_32(uint32_t value);
+void uart_printint(int val);
+void uart_readline(char* buf);
+uint8_t atoi_hex(char c);
+bool is_hex_char(char c);
+uint32_t atoi_hex_str(const char* str);
+void display_state(void);
+
+/// UTILS ///
+int ft_len(char* str);
+bool comp_str(const char* str1, const char* str2);
+
+/// EEPROM ///
+uint8_t ee_read(uint16_t addr);
+bool ee_write(uint16_t addr, uint8_t value);
+bool config_write(uint8_t slot_id, nodeconfig_* config);
+void config_read(uint8_t slot_id, nodeconfig_* config);
+bool check_magic(nodeconfig_* config);
+bool check_integrity(nodeconfig_* config);
+void init_config(nodeconfig_* config);
+
+/// PARSING ///
+uint8_t parse_line(char* line);
+void parse_cmd(char* str);
+void check_command(char* cmd, char* arg);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+bool is_tag_correct(char* str);
+bool is_nb_str(char* str);
+void set_tag(char *tag, nodeconfig_ config);
+uint16_t integrity_calculate( uint8_t *data, int count );
+
+#endif
