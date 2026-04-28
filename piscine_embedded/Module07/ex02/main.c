@@ -16,12 +16,12 @@ void set_tag(char* tag, nodeconfig_ config) {
 }
 
 void init_config(nodeconfig_* config) {
-    config.magic_nb = MAGIC_NB;
-    config.node_id = 12;
-    set_tag("default_tag", config);
-    config.priority = 0;
-    config.checksum = integrity_calculate(
-        (uint8_t*)&config, sizeof(config) - sizeof(config.checksum));
+    config->magic_nb = MAGIC_NB;
+    config->node_id = 12;
+    set_tag("default_tag", *config);
+    config->priority = 0;
+    config->checksum = integrity_calculate(
+        (uint8_t*)&config, sizeof(config) - sizeof(config->checksum));
 }
 
 bool check_integrity(nodeconfig_* config) {
@@ -44,7 +44,6 @@ uint8_t test_slot() {
 }
 
 int main() {
-    nodeconfig_ config = {};
     uint8_t slot_id = test_slot();
     char line[16];
     uart_init();

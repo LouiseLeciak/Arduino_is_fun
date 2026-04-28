@@ -109,8 +109,6 @@ void uart_printhex_32(uint32_t value) {
     uart_printstr(buf);
 }
 
-
-
 void display_state(void) {
     char ascii_version[17];
     // += 16 bcs 16 bytes
@@ -179,3 +177,16 @@ void uart_readline(char* buf) {
         uart_tx(rx);
     }
 }
+
+void print_status(nodeconfig_ temp, uint8_t res) {
+    uart_printstr("Node ID: ");
+    uart_printint(temp.node_id);
+    uart_printstr("\n\rPriority: ");
+    uart_printint(temp.priority);
+    uart_printstr("\n\rSlot: ");
+    uart_printint(res);
+    uart_printstr("\n\rTag: \"");
+    uart_printstr(temp.tag);
+    uart_printstr("\"\n\r");
+}
+

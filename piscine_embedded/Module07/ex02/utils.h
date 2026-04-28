@@ -45,10 +45,12 @@ uint8_t atoi_hex(char c);
 bool is_hex_char(char c);
 uint32_t atoi_hex_str(const char* str);
 void display_state(void);
+void print_status(nodeconfig_ temp, uint8_t res);
 
 /// UTILS ///
 int ft_len(char* str);
 bool comp_str(const char* str1, const char* str2);
+uint32_t atoi_int(const char* str);
 
 /// EEPROM ///
 uint8_t ee_read(uint16_t addr);
@@ -61,12 +63,21 @@ void init_config(nodeconfig_* config);
 
 /// PARSING ///
 uint8_t parse_line(char* line);
-void parse_cmd(char* str);
-void check_command(char* cmd, char* arg);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
+void parse_cmd(char* str, uint8_t *slot_id);
+void check_command(char* cmd, char* arg, uint8_t *slot_id);
 bool is_tag_correct(char* str);
 bool is_nb_str(char* str);
 void set_tag(char *tag, nodeconfig_ config);
 uint16_t integrity_calculate( uint8_t *data, int count );
+
+/// COMMANDS ///
+uint8_t test_slot_validity(uint8_t *slot_id);
+void status_cmd(uint8_t *slot_id);
+void config_reallocating(uint8_t* slot_id, nodeconfig_* config);
+void set_id_cmd(char* arg, uint8_t* slot_id);
+void set_prio_cmd(char* arg, uint8_t *slot_id);
+void set_tag_cmd(char* arg, uint8_t slot_id);
+void facto_reset_cmd(uint8_t slot_id);
 
 #endif
