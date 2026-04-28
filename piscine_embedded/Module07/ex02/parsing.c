@@ -19,7 +19,7 @@ void check_command(char* cmd, char* arg, uint8_t* slot_id) {
     }
 
     else if (comp_str(cmd, "SET_PRIO")) {
-        if (!is_nb_str(arg)) {
+        if (!is_nb_neg(arg)) {
             uart_printstr("error: need a number for prio\n\r");
             return;
         }

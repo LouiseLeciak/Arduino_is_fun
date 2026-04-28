@@ -88,6 +88,24 @@ bool is_nb_str(char* str) {
     return true;
 }
 
+bool is_nb_neg(char* str) {
+    if (!str || !str[0]) return false;
+
+    int i = 0;
+
+    if (str[0] == '-') {
+        i = 1;
+        // if there is only a -
+        if (!str[1]) return false;
+    }
+
+    for (; str[i]; i++) {
+        if (str[i] < '0' || str[i] > '9') return false;
+    }
+
+    return true;
+}
+
 bool is_alnum(char c) {
     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || is_nb(c))
         return true;
@@ -96,30 +114,27 @@ bool is_alnum(char c) {
 }
 
 bool is_tag_correct(char* str) {
-    if (ft_len(str) > 33){
+    if (ft_len(str) > 33) {
         uart_printstr("error: tag too long\n\r");
     }
-        for (int i = 0; str[i]; i++) {
-            if (is_alnum(str[i]) || is_nb(str[i]) || str[i] == '-' ||
-                str[i] == '_')
-                continue;
-            else
-                return false;
-        }
+    for (int i = 0; str[i]; i++) {
+        if (is_alnum(str[i]) || is_nb(str[i]) || str[i] == '-' || str[i] == '_')
+            continue;
+        else
+            return false;
+    }
     return true;
 }
 
-uint16_t integrity_calculate(uint8_t *data, int count)
-{
-   uint16_t sum1 = 0;
-   uint16_t sum2 = 0;
-   int index;
+uint16_t integrity_calculate(uint8_t* data, int count) {
+    uint16_t sum1 = 0;
+    uint16_t sum2 = 0;
+    int index;
 
-   for ( index = 0; index < count; ++index )
-   {
-      sum1 = (sum1 + data[index]) % 255;
-      sum2 = (sum2 + sum1) % 255;
-   }
+    for (index = 0; index < count; ++index) {
+        sum1 = (sum1 + data[index]) % 255;
+        sum2 = (sum2 + sum1) % 255;
+    }
 
-   return (sum2 << 8) | sum1;
+    return (sum2 << 8) | sum1;
 }

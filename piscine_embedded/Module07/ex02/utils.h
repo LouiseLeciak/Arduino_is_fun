@@ -17,8 +17,6 @@
 #define ARG_S 32
 #define MAGIC_NB 22
 
-#include <stdbool.h>
-
 typedef struct{
     uint16_t magic_nb;
     uint32_t node_id;
@@ -53,6 +51,7 @@ void print_status(nodeconfig_ temp, uint8_t res);
 int ft_len(char* str);
 bool comp_str(const char* str1, const char* str2);
 uint32_t atoi_int(const char* str);
+bool is_nb_neg(char* str);
 
 /// EEPROM ///
 uint8_t ee_read(uint16_t addr);
