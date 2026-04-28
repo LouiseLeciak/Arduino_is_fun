@@ -18,15 +18,15 @@ void status_cmd(uint8_t *slot_id) {
     uint8_t res = test_slot_validity(slot_id);
     nodeconfig_ temp;
     // no valid spot
-    if (res == 1) {
+    if (res == 0) {
         uart_printstr("Node unconfigured.\n\r");
         return;
     }
-    config_read(res, &temp);
     if (res == 2) {
         uart_printstr("CRITICAL: Data corruption detected!.\n\r");
         return;
     }
+    config_read(res, &temp);
     print_status(temp, *slot_id);
 }
 

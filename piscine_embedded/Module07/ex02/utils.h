@@ -17,6 +17,8 @@
 #define ARG_S 32
 #define MAGIC_NB 22
 
+#include <stdbool.h>
+
 typedef struct{
     uint16_t magic_nb;
     uint32_t node_id;
