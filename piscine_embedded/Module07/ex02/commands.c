@@ -30,16 +30,41 @@ void status_cmd(uint8_t* slot_id) {
     print_status(temp, *slot_id);
 }
 
+volatile uint8_t write_failure = 0;
+
+bool slot_fail(void) {
+    if (write_failure != 0) {
+        write_failure--;
+    }
+    return (write_failure > 0);
+}
+
 void config_reallocating(uint8_t* slot_id, nodeconfig_* config) {
     for (int i = 0; i < 4; i++) {
-        if (config_write((*slot_id + i) % 4, config)) {
+        if (i > 0){
+            uart_printstr("Realocating config to slot ");
+            uart_printint((*slot_id + i) % 4);
+            uart_printstr("...");
+        }
+        if (config_write((*slot_id + i) % 4, config) && (!slot_fail())) {
             *slot_id = (*slot_id + i) % 4;
+            if (i > 0){
+                uart_printstr("Success\r\nDone.\r\n");
+            }
             return;
+        }
+        if (i > 0){
+            uart_printstr("Fail\r\n");
+        }
+        else {
+            uart_printstr("Corruption detected\r\n");
         }
     }
     uart_printstr("CRITICAL EEPROM FAILURE.\n\r");
     return;
 }
+
+void w_fail_cmd(char* arg) { write_failure = atoi_int(arg) + 1; }
 
 void set_id_cmd(char* arg, uint8_t* slot_id) {
     nodeconfig_ temp;
@@ -69,21 +94,14 @@ void set_tag_cmd(char* arg, uint8_t* slot_id) {
     nodeconfig_ temp;
     config_read(*slot_id, &temp);
     if (!check_magic(&temp) || !check_integrity(&temp)) {
-        // uart_printstr("\n\rcheck magic res : ");
-        // uart_printint(check_magic(&temp));
-        // uart_printstr("\n\rcheck inte res : ");
-        // uart_printint(check_integrity(&temp));
-        // uart_printstr("\r\n");
         init_config(&temp, slot_id);
     }
-    if (!is_tag_correct(arg))
-    {
+    if (!is_tag_correct(arg)) {
         uart_printstr("wrong tag format :(\r\n");
         return;
     }
     temp.tag = (t_tag){};
-    for (uint8_t i=0; i < TAG_LEN && arg[i]; i++)\
-        temp.tag.tag[i] = arg[i];
+    for (uint8_t i = 0; i < TAG_LEN && arg[i]; i++) temp.tag.tag[i] = arg[i];
     temp.checksum = integrity_calculate(&temp);
     config_reallocating(slot_id, &temp);
     return;
@@ -91,40 +109,35 @@ void set_tag_cmd(char* arg, uint8_t* slot_id) {
 
 void facto_reset_cmd(uint8_t slot_id) {
     nodeconfig_ temp = {};
-    temp.magic_nb = MAGIC_NB -1;
+    temp.magic_nb = MAGIC_NB - 1;
     config_write(slot_id, &temp);
     return;
 }
 
-void set_slot_cmd(char *arg, uint8_t* slot_id)
-{
-    if (arg[0] <'0' || arg[0]>'3')
-    {
+void set_slot_cmd(char* arg, uint8_t* slot_id) {
+    if (arg[0] < '0' || arg[0] > '3') {
         uart_printstr("slot must be between 0 and 3\r\n");
         return;
     }
 
-    *slot_id = arg[0]-'0';
+    *slot_id = arg[0] - '0';
     uart_printstr("Changed slot to ");
     uart_printint(*slot_id);
     uart_printstr("\r\n");
 }
 
-
-void get_slot_cmd(uint8_t* slot_id)
-{
+void get_slot_cmd(uint8_t* slot_id) {
     uart_printstr("Current slot is ");
     uart_printint(*slot_id);
     uart_printstr("\r\n");
 }
 
-void kill_slot_cmd(uint8_t* slot_id)
-{
+void kill_slot_cmd(uint8_t* slot_id) {
     nodeconfig_ temp;
 
     config_read(*slot_id, &temp);
     // bit flip exemple
-    ((uint8_t *)&temp)[11] ^= 1;
+    ((uint8_t*)&temp)[11] ^= 1;
     config_write(*slot_id, &temp);
 
     uart_printstr("Flipped a bit :D\r\n");

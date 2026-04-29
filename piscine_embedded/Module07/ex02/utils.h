@@ -54,6 +54,7 @@ int ft_len(char* str);
 bool comp_str(const char* str1, const char* str2);
 uint32_t atoi_int(const char* str);
 bool is_nb_neg(char* str);
+void w_fail_cmd(char* arg);
 
 /// EEPROM ///
 uint8_t ee_read(uint16_t addr);

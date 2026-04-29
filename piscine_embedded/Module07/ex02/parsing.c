@@ -11,7 +11,7 @@ void check_command(char* cmd, char* arg, uint8_t* slot_id) {
     }
 
     else if (comp_str(cmd, "GET_SLOT")) {
-         if (arg[0]) {
+        if (arg[0]) {
             uart_printstr("error: no arg needed for GET_SLOT\n\r");
             return;
         }
@@ -32,6 +32,14 @@ void check_command(char* cmd, char* arg, uint8_t* slot_id) {
             return;
         }
         kill_slot_cmd(slot_id);
+    }
+
+    else if (comp_str(cmd, "W_FAIL")) {
+        if (!is_nb_str(arg)) {
+            uart_printstr("error: need a number for slot\n\r");
+            return;
+        }
+        w_fail_cmd(arg);
     }
 
     else if (comp_str(cmd, "SET_ID")) {
