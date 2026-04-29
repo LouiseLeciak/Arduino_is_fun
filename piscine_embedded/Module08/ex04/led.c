@@ -51,14 +51,31 @@ void set_three_leds(uint8_t led1[3], uint8_t led2[3], uint8_t led3[3]) {
 }
 
 void wheel(uint8_t pos) {
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+
     pos = 255 - pos;
+
     if (pos < 85) {
-        set_rgb(255 - pos * 3, 0, pos * 3);
+        r = 255 - pos * 3;
+        g = 0;
+        b = pos * 3;
     } else if (pos < 170) {
-        pos = pos - 85;
-        set_rgb(0, pos * 3, 255 - pos * 3);
+        pos -= 85;
+        r = 0;
+        g = pos * 3;
+        b = 255 - pos * 3;
     } else {
-        pos = pos - 170;
-        set_rgb(pos * 3, 255 - pos * 3, 0);
+        pos -= 170;
+        r = pos * 3;
+        g = 255 - pos * 3;
+        b = 0;
     }
+
+    uint8_t l1[3] = {r, g, b};
+    uint8_t l2[3] = {r, g, b};
+    uint8_t l3[3] = {r, g, b};
+
+    set_three_leds(l1, l2, l3);
 }

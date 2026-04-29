@@ -4,6 +4,10 @@
 #define LEN 9
 volatile int idx = 0;
 char rgb_buff[LEN] = {0};
+char rain_buff[12] = {0};
+uint8_t rainbow_pos = 0;
+
+volatile bool rainbow = false;
 
 typedef enum State { INIT, WAIT_RGB, RGB, RAINBOW } states_t;
 
@@ -26,28 +30,35 @@ int is_valid_rgb_cmd() {
     }
 
     // hex char for the 6 first
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 6; i++) {
         if (!is_hex_char(rgb_buff[i])) {
             return 0;
         }
     }
 
-    if (rgb_buff[7] != 'D') {
+    if (rgb_buff[6] != 'D') {
         return 0;
     }
     // check if the last char is a valid led
-    if (rgb_buff[8] != '6' && rgb_buff[8] != '7' && rgb_buff[8] != '8') {
+    if (rgb_buff[7] != '6' && rgb_buff[8] != '7' && rgb_buff[8] != '8') {
         return 0;
     }
     return 1;
 }
 
+int check_rainbow() { return (comp_str(rain_buff, "FULLRAINBOW")); }
+
 void __attribute__((signal, used)) USART_RX_vect(void) {
     // get the character
     char rx = uart_rx();
 
-    // if backspace, delete last char and update what's on screen
     if (state == WAIT_RGB) {
+        if (idx == 0 && rx == 'F') {
+            rain_buff[idx++] = rx;
+            rainbow = true;
+            return;
+        }
+
         // x7F = delete in ascii
         if (rx == '\x7F' || rx == '\b') {
             if (idx > 0) {
@@ -64,7 +75,9 @@ void __attribute__((signal, used)) USART_RX_vect(void) {
             uart_printstr("\n\r");
             idx = 0;
 
-            if (is_valid_rgb_cmd()) {
+            if (rainbow && check_rainbow()) {
+                state = RAINBOW;
+            } else if (is_valid_rgb_cmd()) {
                 state = RGB;
             } else {
                 uart_printstr("error: invalid format\n\r");
@@ -73,6 +86,16 @@ void __attribute__((signal, used)) USART_RX_vect(void) {
             return;
         }
 
+        if (rainbow == true) {
+            if (rx >= 'A' && rx <= 'Z') {
+                return;
+            } else if (idx >= 12) {
+                return;
+            } else if (idx < 12) {
+                rain_buff[idx] = rx;
+                idx++;
+            }
+        }
         if (!is_hex_char(rx)) {
             return;
 
@@ -115,7 +138,6 @@ void get_led(uint8_t r, uint8_t g, uint8_t b, char led) {
     set_three_leds(l1, l2, l3);
 }
 
-
 //! mode RAINBOW
 //! ADAPTER WHEEL
 
@@ -127,7 +149,7 @@ int main() {
 
     while (1) {
         if (state == INIT) {
-            uart_printstr("Choose a color in this format #RRGGBB: #");
+            uart_printstr("Choose a color in this format #RRGGBBDX or #FULLRAINBOW: #");
             state = WAIT_RGB;
         }
         if (state == WAIT_RGB) {
@@ -136,6 +158,10 @@ int main() {
         if (state == RGB) {
             rgb_from_buffer();
             state = INIT;
+        }
+        if (state == RAINBOW) {
+            wheel(rainbow_pos++);
+            _delay_ms(20);
         }
     }
 }
