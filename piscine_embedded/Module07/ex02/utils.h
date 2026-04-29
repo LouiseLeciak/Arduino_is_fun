@@ -15,21 +15,23 @@
 #define TAG_LEN 32
 #define CMD_S 16
 #define ARG_S 32
-#define MAGIC_NB 22
+#define MAGIC_NB 0xABCD
+
+typedef struct {char tag[TAG_LEN+1];} t_tag;
 
 typedef struct{
     uint16_t magic_nb;
     uint32_t node_id;
-    char tag[TAG_LEN + 1]; // max length 32 + 1 '\0'
     int16_t priority;
+    t_tag tag; // max length 32 + 1 '\0'
     uint16_t checksum;
 } nodeconfig_;
 
 typedef enum{
-    SLOT_0 = 0x10,
-    SLOT_1 = 0x100,
-    SLOT_2 = 0x180,
-    SLOT_3 = 0x240,
+    SLOT_0 = 0x00,
+    SLOT_1 = 0x40,
+    SLOT_2 = 0x80,
+    SLOT_3 = 0xc0,
 } slots_;
 
 /// UART ///
@@ -69,8 +71,8 @@ void parse_cmd(char* str, uint8_t *slot_id);
 void check_command(char* cmd, char* arg, uint8_t *slot_id);
 bool is_tag_correct(char* str);
 bool is_nb_str(char* str);
-void set_tag(char *tag, nodeconfig_ config);
-uint16_t integrity_calculate( uint8_t *data, int count );
+// void set_tag(char *tag, nodeconfig_ config);
+uint16_t integrity_calculate(nodeconfig_ *config);
 
 /// COMMANDS ///
 uint8_t test_slot_validity(uint8_t *slot_id);
@@ -78,7 +80,12 @@ void status_cmd(uint8_t *slot_id);
 void config_reallocating(uint8_t* slot_id, nodeconfig_* config);
 void set_id_cmd(char* arg, uint8_t* slot_id);
 void set_prio_cmd(char* arg, uint8_t *slot_id);
-void set_tag_cmd(char* arg, uint8_t slot_id);
+void set_tag_cmd(char* arg, uint8_t *slot_id);
 void facto_reset_cmd(uint8_t slot_id);
+void set_slot_cmd(char *arg, uint8_t* slot_id);
+void get_slot_cmd(uint8_t* slot_id);
+void kill_slot_cmd(uint8_t* slot_id);
+
+void set_tag(t_tag tag, nodeconfig_* config);
 
 #endif

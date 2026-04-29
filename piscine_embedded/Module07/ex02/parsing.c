@@ -10,6 +10,30 @@ void check_command(char* cmd, char* arg, uint8_t* slot_id) {
         status_cmd(slot_id);
     }
 
+    else if (comp_str(cmd, "GET_SLOT")) {
+         if (arg[0]) {
+            uart_printstr("error: no arg needed for GET_SLOT\n\r");
+            return;
+        }
+        get_slot_cmd(slot_id);
+    }
+
+    else if (comp_str(cmd, "SET_SLOT")) {
+        if (!is_nb_str(arg)) {
+            uart_printstr("error: need a number for slot\n\r");
+            return;
+        }
+        set_slot_cmd(arg, slot_id);
+    }
+
+    else if (comp_str(cmd, "KILL_SLOT")) {
+        if (arg[0]) {
+            uart_printstr("error: no arg needed for KILL_SLOT\n\r");
+            return;
+        }
+        kill_slot_cmd(slot_id);
+    }
+
     else if (comp_str(cmd, "SET_ID")) {
         if (!is_nb_str(arg)) {
             uart_printstr("error: need a number for id\n\r");
@@ -31,7 +55,7 @@ void check_command(char* cmd, char* arg, uint8_t* slot_id) {
             uart_printstr("error: need alphnum or - _ for tag\n\r");
             return;
         }
-        set_tag_cmd(arg, *slot_id);
+        set_tag_cmd(arg, slot_id);
     }
 
     else if (comp_str(cmd, "FACTORY_RESET")) {

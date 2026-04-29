@@ -20,14 +20,22 @@ uint32_t atoi_hex_str(const char* str) {
 }
 
 uint32_t atoi_int(const char* str) {
-    uint32_t res = 0;
-    int i = 0;
+    long result;
+    long signe;
+    int i;
 
-    while (str[i] != '\0') {
-        res = res * 10 + atoi_hex(str[i]);
+    result = 0;
+    signe = 1;
+    i = 0;
+    if (str[0] == '-') {
+        signe *= -1;
         i++;
     }
-    return res;
+    while (str[i] && (str[i] >= '0') && (str[i] <= '9')) {
+        result = ((result * 10) + (str[i] - '0'));
+        i++;
+    }
+    return (result * signe);
 }
 
 bool is_hex_char(char c) {
@@ -126,10 +134,13 @@ bool is_tag_correct(char* str) {
     return true;
 }
 
-uint16_t integrity_calculate(uint8_t* data, int count) {
+uint16_t integrity_calculate(nodeconfig_* config) {
     uint16_t sum1 = 0;
     uint16_t sum2 = 0;
     int index;
+
+    uint8_t* data = (uint8_t*)config;
+    const uint8_t count = sizeof(*config) - sizeof(config->checksum);
 
     for (index = 0; index < count; ++index) {
         sum1 = (sum1 + data[index]) % 255;
