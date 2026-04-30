@@ -113,18 +113,6 @@ bool is_tag_correct(char* str) {
     return true;
 }
 
-uint16_t integrity_calculate(uint8_t* data, int count) {
-    uint16_t sum1 = 0;
-    uint16_t sum2 = 0;
-    int index;
-
-    for (index = 0; index < count; ++index) {
-        sum1 = (sum1 + data[index]) % 255;
-        sum2 = (sum2 + sum1) % 255;
-    }
-
-    return (sum2 << 8) | sum1;
-}
 
 uint8_t hex_to_bit(char *hex) {
     // * 16 bcs HEX is base 16

@@ -152,9 +152,6 @@ void __attribute__((signal, used)) USART_RX_vect(void) {
     }
 }
 
-//! mode RAINBOW
-//! ADAPTER WHEEL
-
 int main() {
     uart_init();
     SPI_master_init();

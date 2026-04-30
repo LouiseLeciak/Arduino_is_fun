@@ -5,7 +5,6 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include <stdbool.h>
 
 #define BAUD 115200
 // p182 table 20-1
