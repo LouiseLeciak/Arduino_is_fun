@@ -1,7 +1,4 @@
-
 #include "utils.h"
-
-// https://www.alldatasheet.com/html-pdf/310026/NXP/PCA9555/294/5/PCA9555.html
 
 uint8_t read_pca9555(uint8_t reg) {
     i2c_start();
@@ -29,6 +26,7 @@ void write_pca9555(uint8_t reg, uint8_t data) {
     i2c_stop();
 }
 
+// reg:
 // 0x00 = Input P0
 // 0x01 = Input P1
 // 0x02 = Output P0
@@ -37,22 +35,9 @@ void write_pca9555(uint8_t reg, uint8_t data) {
 // 0x05 = Polarity P1
 // 0x06 = Config P0
 // 0x07 = Config P1
+// void pca9555_write_with_mask(uint8_t reg, uint8_t data, uint8_t mask){
+//     utin8_t val;
 
-int main() {
-    i2c_init();
-
-    // every pin are 0 so output
-    write_pca9555(CONFIG_PORT, 0x00);
-
-
-    while (1) {
-        // led on (D9 = 1)
-        write_pca9555(OUTPUT_PORT, ~D9_MASK);
-        _delay_ms(500);
-
-        // led off
-        // schema -> invert logo, means ff turn of and 00 turn on
-        write_pca9555(OUTPUT_PORT, 0xFF);
-        _delay_ms(500);
-    }
-}
+//     val = read_pca9555(reg);
+//     write_pca9555(reg,)
+// }
